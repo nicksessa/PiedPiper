@@ -270,6 +270,10 @@ function clear() {
             //console.log(response.similartracks.track[i].name);
             var tempS = response.results.trackmatches.track[i].name
             trackList.push(tempS)
+
+            var theHref = response.results.trackmatches.track[i].url
+            console.log("<a href='" + theHref + "'" + "class='btn btn-default'>" + "LINK!</a>")
+            //$("<td>").text(response.results.trackmatches.track[i].url)
         
           //console.log("Create a new row in the table")
           // Create the new row
@@ -278,7 +282,8 @@ function clear() {
             $("<td>").text(response.results.trackmatches.track[i].artist),
             $("<td>").text("unknown"),
             $("<td>").text("unknown"),
-            $("<td>").text(response.results.trackmatches.track[i].url),
+            $("<td>").html("<a href='" + theHref + "'" + "class='btn button'>" + "LINK!</a>")
+
           );
         
           // Append the new row to the table
