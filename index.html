@@ -255,7 +255,7 @@
             var apiKey = "637a89984572ad6c6f2f4d364da0305e"
 
             //var queryURL = "http://ws.audioscrobbler.com/2.0/?method=track.getsimilar" + "&limit=5" + "&artist=" + artist + "&track=" + title + "&api_key=" + apiKey + "&format=json"
-            var queryURL = "http://ws.audioscrobbler.com/2.0/?method=track.search" + "&limit=5" + "&track=" + title + "&api_key=" + apiKey + "&format=json"
+            var queryURL = "https://ws.audioscrobbler.com/2.0/?method=track.search" + "&limit=5" + "&track=" + title + "&api_key=" + apiKey + "&format=json"
 
             console.log("queryURL: " + queryURL)
             var trackList = [];
@@ -337,7 +337,7 @@
                     // have to call last.fm again to get that info
 
                     var apiKey = "637a89984572ad6c6f2f4d364da0305e"
-                    let queryURL = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=" + apiKey + "&artist=" + artistName + "&track=" + trackName + "&format=json"
+                    let queryURL = "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=" + apiKey + "&artist=" + artistName + "&track=" + trackName + "&format=json"
                     console.log("url to get track info: " + queryURL)
 
                     $.ajax({
