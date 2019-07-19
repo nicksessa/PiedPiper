@@ -176,7 +176,6 @@
                                     <th scope="col">Artist</th>
                                     <th scope="col">Album</th>
                                     <th scope="col">Last.fm Link</th>
-                                    <th scope="col">YouTube Link</th>
                                 </tr>
                             </thead>
                             <!-- Music list goes here -->
@@ -307,14 +306,13 @@
                         $("<td>").text(response.results.trackmatches.track[i].artist).attr('id', 'artistID' + i),
                         $("<td>").text("unknown").attr('id', 'albumNameID' + i),
                         //$("<td>").text("unknown").attr('id', 'albumReleaseID' + i ),
-                        $("<td>").html("<a href='" + theHref + "'" + "target='_blank'" + "class='btn button'>" + "Last.fm LINK!</a>"),
-                        $("<td>").html("<a href='" + theHref + "'" + "target='_blank'" + "id='youTubeLinkID" + i + "'" + "class='btn button'>" + "YouTube LINK!</a>")
-                        
+                        $("<td>").html("<a href='" + theHref + "'" + "target='_blank'" + "class='btn button'>" + "Last.fm LINK!</a>")
+
                     );
                     // Append the new row to the table
                     //console.log("append the row to the table")
                     $("#music-table > tbody").append(newRow);
-                    firstSong = $("#trackID0").val().trim();
+                    //firstSong = $("#trackID0").val().trim();
 
                 }
 
@@ -365,109 +363,24 @@
 
 
 
-                
+
 
             });  // first call to last.fm
 
 
 
 
-            // Call the youtube api here
-            // Get ONE video url from youtube!
-            // We don't need multiple results.  We just need the top matching result.
-            // put the url in the href variable
-
-
-
-
-            var youTubeApiKey = "AIzaSyBdKCyg7sttppX9lC9j18Rpdz99RddVhXA"
-            var queryURL = " https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=" + newSongString + "&topicId=%2Fm%2F04rlf&type=video&key=" + youTubeApiKey;
-            console.log("youTube URL: " + queryURL)
-            var youTubeVideoID
-
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            }).then(function (response) {
-                var videoIds = JSON.stringify(response.items[0].id.videoId);
-                var videoLink = "https://www.youtube.com/watch?v=" + videoIds;
-
-
-                console.log("--- Response from youtube ---")
-                console.log(response)
-                //$("#videoBtn").click(function () {
-                // we get the video id above and we fix the videoLink and create the href below
-                // what does document.location.href do exactly and why do we need it???
-
-                //document.location.href = (videoLink.replace(/['"]+/g, ''))
-                //});
-
-                console.log(response.items[0].snippet.title);
-                console.log(videoIds.replace(/['"]+/g, ''));
-                youTubeVideoID = videoIds.replace(/['"]+/g, '')
-
-                console.log("-- you tube video id: " + youTubeVideoID)
-                videoLink = "https://www.youtube.com/watch?v=" + youTubeVideoID;
-                console.log("<<>> this is the youtube link -->>>  " + videoLink)
-
-
-                // clear the video output div
-                $("#video-output").empty();
-
-                // let's put a pile of data in the video-output div
-
-                $("<img>", {
-                    src: response.items[0].snippet.thumbnails.medium.url,
-                    width: response.items[0].snippet.thumbnails.medium.width,
-                    height: response.items[0].snippet.thumbnails.medium.height
-                }).appendTo("#video-output");
-                $("<h1></h1>").text(response.items[0].snippet.title).appendTo("#video-output");
-                $("<p></p>").text(response.items[0].snippet.description).appendTo("#video-output");
-
-                $("<li></li>").text("Published at: " + response.items[0].snippet.publishedAt).appendTo("#video-output");
-
-
-
-                // call youtube again and get statistics on the video we found (use part=statistics
-
-
-
-                //var youTubeApiKey = "AIzaSyBdKCyg7sttppX9lC9j18Rpdz99RddVhXA"
-                //var queryURL = " https://www.googleapis.com/youtube/v3/search?part=statistics&maxResults=1&q=" + trackList[0] + "&topicId=%2Fm%2F04rlf&type=video&key=" + youTubeApiKey;
-
-                //console.log("youTube URL: " + queryURL)
-
-
-                //$.ajax({
-                //   url: queryURL,
-                //   method: "GET"
-                //}).then(function (response) {
-
-                console.log("youTube video id: " + youTubeVideoID)
-
-                $.getJSON("https://www.googleapis.com/youtube/v3/videos", {
-                    key: "AIzaSyBdKCyg7sttppX9lC9j18Rpdz99RddVhXA",
-                    part: "snippet,statistics",
-                    id: youTubeVideoID
-                }, function (response) {
-
-                    $("<li></li>").text("View count: " + response.items[0].statistics.viewCount).appendTo("#video-output");
-                    $("<li></li>").text("Favorite count: " + response.items[0].statistics.favoriteCount).appendTo("#video-output");
-                    $("<li></li>").text("Like count: " + response.items[0].statistics.likeCount).appendTo("#video-output");
-                    $("<li></li>").text("Dislike count: " + response.items[0].statistics.dislikeCount).appendTo("#video-output");
-
-                    $("<li></li>").html("<a href='" + videoLink + "'" + "target='_blank'" + "class='btn button'>" + "YouTube LINK!</a>").appendTo("#video-output");
-
-                });
-
-
-
-            });
-
 
 
 
         })
+
+
+
+
+
+
+
 
         $(document).ready(function () {
             $(document).on("click", "#music-table tr", function (event) {
@@ -482,7 +395,101 @@
                 console.log("artist name: " + $(artistName).text())
 
 
-            });
+
+                // Call the youtube api here
+                // Get ONE video url from youtube!
+                // We don't need multiple results.  We just need the top matching result.
+                // put the url in the href variable
+
+                var newSongTitle = $(songTitle).text()
+                newSongTitle = newSongTitle.split(' ').join('+');
+
+                var youTubeApiKey = "AIzaSyBdKCyg7sttppX9lC9j18Rpdz99RddVhXA"
+                var queryURL = " https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=" + newSongTitle + "&topicId=%2Fm%2F04rlf&type=video&key=" + youTubeApiKey;
+                console.log("youTube URL: " + queryURL)
+                var youTubeVideoID
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                }).then(function (response) {
+                    var videoIds = JSON.stringify(response.items[0].id.videoId);
+                    var videoLink = "https://www.youtube.com/watch?v=" + videoIds;
+
+
+                    console.log("--- Response from youtube ---")
+                    console.log(response)
+                    //$("#videoBtn").click(function () {
+                    // we get the video id above and we fix the videoLink and create the href below
+                    // what does document.location.href do exactly and why do we need it???
+
+                    //document.location.href = (videoLink.replace(/['"]+/g, ''))
+                    //});
+
+                    console.log(response.items[0].snippet.title);
+                    console.log(videoIds.replace(/['"]+/g, ''));
+                    youTubeVideoID = videoIds.replace(/['"]+/g, '')
+
+                    console.log("-- you tube video id: " + youTubeVideoID)
+                    videoLink = "https://www.youtube.com/watch?v=" + youTubeVideoID;
+                    console.log("<<>> this is the youtube link -->>>  " + videoLink)
+
+
+                    // clear the video output div
+                    $("#video-output").empty();
+
+                    // let's put a pile of data in the video-output div
+
+                    $("<img>", {
+                        src: response.items[0].snippet.thumbnails.medium.url,
+                        width: response.items[0].snippet.thumbnails.medium.width,
+                        height: response.items[0].snippet.thumbnails.medium.height
+                    }).appendTo("#video-output");
+                    $("<h1></h1>").text(response.items[0].snippet.title).appendTo("#video-output");
+                    $("<p></p>").text(response.items[0].snippet.description).appendTo("#video-output");
+
+                    $("<li></li>").text("Published at: " + response.items[0].snippet.publishedAt).appendTo("#video-output");
+
+
+
+                    // call youtube again and get statistics on the video we found (use part=statistics
+
+
+
+                    //var youTubeApiKey = "AIzaSyBdKCyg7sttppX9lC9j18Rpdz99RddVhXA"
+                    //var queryURL = " https://www.googleapis.com/youtube/v3/search?part=statistics&maxResults=1&q=" + trackList[0] + "&topicId=%2Fm%2F04rlf&type=video&key=" + youTubeApiKey;
+
+                    //console.log("youTube URL: " + queryURL)
+
+
+                    //$.ajax({
+                    //   url: queryURL,
+                    //   method: "GET"
+                    //}).then(function (response) {
+
+                    console.log("youTube video id: " + youTubeVideoID)
+
+                    $.getJSON("https://www.googleapis.com/youtube/v3/videos", {
+                        key: "AIzaSyBdKCyg7sttppX9lC9j18Rpdz99RddVhXA",
+                        part: "snippet,statistics",
+                        id: youTubeVideoID
+                    }, function (response) {
+
+                        $("<li></li>").text("View count: " + response.items[0].statistics.viewCount).appendTo("#video-output");
+                        $("<li></li>").text("Favorite count: " + response.items[0].statistics.favoriteCount).appendTo("#video-output");
+                        $("<li></li>").text("Like count: " + response.items[0].statistics.likeCount).appendTo("#video-output");
+                        $("<li></li>").text("Dislike count: " + response.items[0].statistics.dislikeCount).appendTo("#video-output");
+
+                        $("<li></li>").html("<a href='" + videoLink + "'" + "target='_blank'" + "class='btn button'>" + "YouTube LINK!</a>").appendTo("#video-output");
+
+                    });  // the second youtube ajax call
+
+
+
+                });  // the youtube ajax call
+
+            });  // the you tube link click event
+
         });
 
 
